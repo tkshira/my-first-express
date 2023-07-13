@@ -22,13 +22,6 @@ app.use('/api/courses', coursesroute);
 //     app.use(express.bodyParser())
 // })
 
-const users = [
-    {user: '001', password: '123456'},
-    {user: '002', password: 'abcdef'},
-    {user: '003', password: 'zyxwvu'},
-    {user: '004', password: '987654'}
-];
-
 app.use(session({
     secret: 'abcd',
     resave: true,

@@ -1,16 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const {client} = require('./database.js');
+const {databaseAdmin, client} = require('./database.js');
+const { generateToken } = require('./utils/jwt-token-authenticator.js');
 
-const database = client.db("user-admin");
-const collection = database.collection("users");
+const collection = databaseAdmin.collection("users");
 
 
 async function getUser(filter){
-    await client.connect();
     console.log(filter);
+    await client.connect();
     let user = await collection.find(filter);
-    console.log(user.toArray())
     return await user.toArray();
 }
 
@@ -25,7 +24,7 @@ router.post('', (req, res) => {
             if (user.length===0){ 
                 return res.status(404).send('User not found / password is incorrect');
             }
-            return res.send('Login Succeeded')
+            return res.send(generateToken(username));
         },
         (reason) => {
             res.status(404).send(`Error: ${reason}`)

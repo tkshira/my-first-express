@@ -1,5 +1,5 @@
 const {MongoClient, ServerApiVersion } = require('mongodb');
-const uri = 'mongodb+srv://myuser:47ZQro9Pt5zp7Ala@my-first-mongodb.wv6yush.mongodb.net/?retryWrites=true&w=majority';
+const uri = 'mongodb+srv://myuser:5coRHR9f1FCBVTnI@my-first-mongodb.wv6yush.mongodb.net/?retryWrites=true&w=majority';
 
 const client = new MongoClient(uri, {
     serverApi: {
@@ -10,12 +10,13 @@ const client = new MongoClient(uri, {
 });
 
 const database = client.db("my-first-mongodb");
+const databaseAdmin = client.db("user-admin");
 
 async function run(){
     try {
         await client.connect();
 
-        await client.db("admin").command({ ping: 1});
+        await client.db("my-first-mongodb").command({ ping: 1});
         console.log("Pinged your deployment. You successfully connected to MongoDB");
 
         // try {
@@ -33,4 +34,4 @@ async function run(){
 
 run().catch(console.dir);
 
-module.exports = { database, client };
+module.exports = { database, databaseAdmin, client };

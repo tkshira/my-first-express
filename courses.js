@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const {MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-
-const uri = 'mongodb+srv://myuser:47ZQro9Pt5zp7Ala@my-first-mongodb.wv6yush.mongodb.net/?retryWrites=true&w=majority';
+const { database, client } = require('./database')
+const { authenticateToken } = require('./utils/jwt-token-authenticator')
 
 // const nippou = [
 //     {empcod: '001', nipdate: new Date("2022-06-12"), start: '09:00', end: '12:00'},
@@ -11,13 +10,7 @@ const uri = 'mongodb+srv://myuser:47ZQro9Pt5zp7Ala@my-first-mongodb.wv6yush.mong
 //     {empcod: '002', nipdate: new Date("2022-06-12"), start: '09:00', end: '10:00'},
 // ];
 
-const client = new MongoClient(uri, {
-    serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true,
-    }
-});
+router.use(authenticateToken);
 
 function addDays(date, days) {
     var result = new Date(date);
@@ -25,31 +18,7 @@ function addDays(date, days) {
     return result;
 }
 
-const database = client.db("my-first-mongodb");
 const collection = database.collection("courses");
-
-async function run(){
-    try {
-        await client.connect();
-
-        await client.db("admin").command({ ping: 1});
-        console.log("Pinged your deployment. You successfully connected to MongoDB");
-
-        // try {
-        //     const insertManyResult = await collection.insertMany(nippou)
-        //     console.log(`${insertManyResult.insertedCount} documents successfully inserted`)
-        // }
-        // catch(err){
-        //     console.log(`Something went very wrong: ${err}`);
-        // }
-    }
-    finally{
-        await client.close();
-    }
-}
-
-run().catch(console.dir);
-
 
 async function getCourses(filter){
     await client.connect();
